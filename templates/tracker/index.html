@@ -1,0 +1,68 @@
+{% extends 'tracker/base.html' %}
+
+{% block main_content %}
+
+<div class="row">
+        <a class="btn-floating dropdown-button btn right" data-activates='filter'><i class="material-icons">sort</i></a>
+      <div class="col s12 m5">
+        <div class="card-panel red">
+          <span class="white-text">Hello, {{username}}!
+          
+          </span>
+        </div>
+      </div>
+    <ul id='filter' class='dropdown-content'>
+      <li class="disabled"><a>Sort by</a></li>
+      <li class="divider"></li>
+    <li><a href="/tracker/">All</a></li>
+    <li><a href="?sort=Today">Today</a></li>
+  </ul>
+  
+    </div>
+<div class="row">
+{% for series in series_list %}
+    <div class="col s3" id="{{series.id}}-div">
+        <a class="waves-effect waves-light dropdown-button btn-flat" data-activates='{{series.id}}_options' ><i class="material-icons gray">settings</i></a>
+          <a href="{% url 'watch_episode' series.id %}" class="waves-effect btn modal-trigger red"><i class="material-icons">play_arrow</i></a>
+          <!-- Dropdown Structure -->
+          <ul id='{{series.id}}_options' class='dropdown-content'>
+            <li><a href="{% url 'update_series' series.id %}" class="material-icons">edit</a></li>
+            <li><a href="#!" class="material-icons">share</a></li>
+            <li class="divider"></li>
+            <li><a class="material-icons series-delete red" series-id="{{series.id}}">delete</a></li>
+          </ul>
+        <div class="card small hoverable">
+            <div class="card-image">
+                <img src="{{series.cover_image_url}}" width="300" height="250">
+                <span class="card-title grey-text text-lighten-4">{{series.release_day}}</span>
+            </div>
+            <div class="card-content">
+                <p>{{series.title}}</p>
+            </div>
+             <!-- Dropdown Structure -->
+            <div class="card-action">
+   <button class="waves-effect waves-light btn right ep-done left" series-id="{{series.id}}">#<strong id="ep-number-{{series.id}}">{{series.current_episode}}</strong><i class="material-icons left">done</i></button>
+            </div>
+          </div>
+
+          <ul class="collapsible popout hoverable" data-collapsible="accordion">
+    <li>
+      <div class="collapsible-header hoverable"><i class="material-icons">description</i>Description</div>
+      <div class="collapsible-body">
+        
+        <p><a href="{% url 'update_series' series.id %}" class="tooltipped material-icons" data-delay="50" data-tooltip="Edit entry.">edit</a>
+        </br>
+        {{series.description}}</p>
+      </div>
+    </li>
+  </ul>
+        </div>
+
+{% if forloop.counter|divisibleby:4 %}
+    </div>
+<div class="row">
+    {% endif %}
+{% endfor %}
+</div>
+<div style="clear: both"></div>
+{% endblock %}

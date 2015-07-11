@@ -1,0 +1,30 @@
+{% extends 'tracker/base.html' %}
+{% block main_content %}
+<div class="row">
+    <form class="col s12 form" role="form" method="post" action=".">
+            {% csrf_token %}
+                <div class="row">
+                  <div class="col s12 m5">
+                    <div class="card-panel red">
+                        <span class="white-text">Series Tracker requires you to be logged in.</span>
+                    </div>
+                  </div>
+                </div>
+            <div class="row">
+            <div class="input-field col s6">
+              <input  placeholder="Username" id="id_username" maxlength="254" name="username" type="text" required autofocus="">
+              <label for="id_username">Username</label>
+            </div>
+                </div>
+                <div class="row">
+            <div class="input-field col s6">
+              <input  id="id_password" name="password" type="password" required>
+              <label for="id_password">Password</label>
+            </div>
+                    </div>
+        <button class="btn btn-lg btn-primary btn-block" type="submit" value="Submit" />Sign in</button>
+        </form>
+    </div>
+<div><a href="{% url 'registration_register' %}" class="waves-effect waves-light btn">Register</a></div>
+<div style="clear: both"></div>
+{% endblock %}

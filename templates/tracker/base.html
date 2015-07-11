@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MD R. Islam | > Series Tracker</title>
+  
+  <link rel="stylesheet" href="{% static 'css/materialize.css' %}">
+  <link rel="stylesheet" href="{% static 'css/tracker.css' %}" type="text/css" />
+    <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="shortcut icon" type="image/ico" href="{% static 'images/favicon.ico' %}">
+    
+</head>
+<body>
+  <div class="progress" id="progress">
+      <div class="indeterminate"></div>
+      </div>
+  {% block iframe_block %}
+<div class="navbar-fixed">
+  <nav>
+    <div class="nav-wrapper red">
+      <a href="{% url 'index' %}" class="brand-logo center">Series Tracker</a>
+    </div>
+  </nav>
+    </div>
+  <div class="parallax-container">
+    <div class="parallax"><img src="{% static 'images/parallax.png' %}"></div>
+  </div>
+
+  <div class="container">
+    <div class="section">
+      
+       {% block main_content %}{% endblock %}
+        </div>
+      </div>
+    </div>
+<footer class="page-footer black">
+  <div class="footer-copyright">
+    <div class="container">
+    <a href="/myportfolio/" class="waves-effect btn red"><i class="material-icons">tag_faces</i></a>
+    </div>
+  </div>
+</footer>
+    {% endblock %}
+   <div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
+    <a class="btn-floating btn-large red {% if not user.is_authenticated %}disabled{% endif %}"><i class="large material-icons">more_vert</i></a>
+    <ul id='floaty-side-nav'>
+        {% if user.is_authenticated %}
+        <li><a href="#add_series_modal" class="waves-effect waves-circle waves-light btn-floating modal-trigger red" id='add_series_button'>
+            <i class="material-icons">add</i></a></li>
+      <li><a href="{% url 'auth_logout' %}?next=/tracker/" class="waves-effect waves-circle waves-light btn-floating red">
+          <i class="material-icons">directions_walk</i></a></li>
+          {% endif %}
+          <li><a href="#" class="waves-effect waves-circle waves-light btn-floating red" id="menu-up">
+              <i class="material-icons">vertical_align_top</i></a></li>
+    </ul>
+    
+  </div>
+  
+  <!-- Modal Structure -->
+<div id="add_series_modal" class="modal">
+<div class="modal-content">
+  <h4>Add Series</h4>
+  <p>Fill out the form below to add a series</p>
+<form class="col s12 form" role="form"  method="post" action="" id="add-form">
+{% csrf_token %}
+{{ form.non_field_errors }}
+{% if form.errors %}
+{% for hidden in form.hidden_fields %}
+{{ hidden }}
+{% endfor %}
+<div id="message"></div>
+<ul class="collection red">
+{% for error in form.errors.values %}
+<li class="collection-item">{{ error }}</li>
+{% endfor %}
+</ul>
+{% endif %}
+
+<div class="row">
+  <div class="input-field col s6">
+    <i class="material-icons prefix">star</i>
+    {{ form.title }}
+    <label for="{{ form.title.id_for_label }}">Title*</label>
+  </div>
+  <div class="input-field col s6">
+    {{ form.release_day }}
+    <label for="{{ form.release_day.id_for_label }}">Day*</label>
+    
+  </div>
+</div>
+<div class="row">
+  <div class="input-field col s6">
+    <i class="material-icons prefix">bookmark</i>
+    {{ form.current_episode }}
+    <label for="{{ form.current_episode.id_for_label }}">Episode #</label>
+  </div>
+  <div class="input-field col s6">
+    <i class="material-icons prefix">wallpaper</i>
+    {{ form.cover_image_url }}
+    <label for="{{ form.cover_image_url.id_for_label }}">Cover Image URL</label>
+  </div>
+</div>
+<div class="row">
+  <div class="input-field col s6">
+    <i class="material-icons prefix">videocam</i>
+     <input placeholder="http://" id="{{ id_stream_site }}" name="stream_site" type="url">
+    <label for="{{ form.stream_site.id_for_label }}">Stream Site</label>
+  </div>
+  <div class="input-field col s6">
+    <i class="material-icons prefix">local_offer</i>
+    {{ form.tag }}
+    <label for="{{ form.tag.id_for_label }}">Tag</label>
+  </div>
+</div>
+<div class="row">
+  <div class="input-field col s6">
+    <i class="material-icons prefix">subject</i>
+    {{ form.description }}
+   
+  </div>
+   <button name="submit" type="submit" value="Submit" class="waves-effect waves-green btn-large right" />
+  <i class="material-icons">check</i></button>
+  <div id="preloader-form"><div class="preloader-wrapper big active">
+      <div class="spinner-layer spinner-blue">
+        <div class="circle-clipper left">
+          <div class="circle"></div>
+        </div><div class="gap-patch">
+          <div class="circle"></div>
+        </div><div class="circle-clipper right">
+          <div class="circle"></div>
+        </div>
+      </div></div>
+</div>
+</form>
+ </div>
+  
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/js/materialize.min.js"></script>
+   <script src="http://materializecss.com/js/init.js"></script>
+   <script type="text/javascript" src="{% static 'js/tracker.js' %}"></script>
+<script type='text/javascript'>
+$(document).ready(function(){
+    {% if form_errors %}
+    document.getElementById("add_series_button").click();
+    {% endif %}
+    
+    {% if newCard %}
+    Materialize.toast('<span>New series, {{newCard}}, added!</span>', 6000);
+    {% endif %}
+    
+    {% if newUser %}
+    Materialize.toast('<span>Hover over the button on the bottom-right, and click the plus to add a series. Swipe to dismiss.</span>', 9000);
+    {% endif %}
+});
+</script>
+</body>
+</html>
